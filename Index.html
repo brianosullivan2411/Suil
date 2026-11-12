@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Súil — Multi-Sport Gear & Mileage Tracker for iOS</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --accent-blue: #0071e3;
+            --accent-blue-hover: #0077ed;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #1c1c1e;
+                --text-primary: #f5f5f7;
+                --text-secondary: #86868b;
+                --accent-blue: #2997ff;
+                --accent-blue-hover: #40a9ff;
+                --border-light: rgba(255, 255, 255, 0.12);
+                --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Frosted Navigation Bar */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            background-color: color-mix(in srgb, var(--bg-primary) 80%, transparent);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .nav-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 14px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 96px 22px 72px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent-blue);
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 6vw, 64px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: clamp(18px, 2.5vw, 22px);
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin: 0 auto 36px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px 26px;
+            border-radius: 980px;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .cta-button:hover {
+            background-color: var(--accent-blue-hover);
+            transform: scale(1.02);
+        }
+
+        /* Bento Feature Grid */
+        .section {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 64px 22px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(30px, 4vw, 42px);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        /* Privacy & Support Section */
+        .info-band {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            margin-top: 40px;
+        }
+
+        .info-grid {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 64px 22px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 48px;
+        }
+
+        .info-block h3 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            margin-bottom: 12px;
+        }
+
+        .info-block p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .info-block a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .info-block a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 32px 22px 48px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-logo">Súil</a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#support">Support</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="badge">Built for iOS</div>
+        <h1>Keep an eye on every kilometer.</h1>
+        <p>Súil is a clean, lightweight multi-sport gear tracker designed to monitor the lifespan of your running shoes, cycling kit, and swim equipment—right from your Home Screen.</p>
+        <a href="#features" class="cta-button">Explore Features</a>
+    </header>
+
+    <section id="features" class="section">
+        <div class="section-header">
+            <h2>Designed for endurance athletes.</h2>
+            <p>Track distance, sessions, or time elapsed without subscriptions or clutter.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="card">
+                <div>
+                    <div class="card-icon">👟</div>
+                    <h3>Multi-Sport Tracking</h3>
+                    <p>Log kilometers on your road and trail shoes, track bike tire wear, or monitor swim goggles by sessions and months used.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="card-icon">📱</div>
+                    <h3>Home Screen Widgets</h3>
+                    <p>Glance at your active gear rotation and wear percentages directly on your iPhone Home Screen with native WidgetKit support.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="card-icon">🔒</div>
+                    <h3>Private by Design</h3>
+                    <p>No accounts, no cloud tracking, and no subscriptions. All your gear data stays securely on your device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="info-band">
+        <div class="info-grid">
+            <div id="privacy" class="info-block">
+                <h3>Privacy Policy</h3>
+                <p><strong>Effective Date:</strong> November 2026</p>
+                <p>Súil respects your privacy. The app does not collect, store, transmit, or share any personal information, usage analytics, or location data.</p>
+                <p>All gear entries and mileage logs are stored locally on your device using Apple's secure on-device storage so your app and Home Screen widget stay in sync.</p>
+            </div>
+
+            <div id="support" class="info-block">
+                <h3>Support & Feedback</h3>
+                <p>Have a question, found a bug, or want to suggest a new gear category for a future update?</p>
+                <p>Get in touch directly via email at <a href="mailto:support@example.com">support@example.com</a> and we will get back to you as soon as possible.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>Copyright © 2026 Brian O'Sullivan. All rights reserved.</div>
+        <div>Súil — Gear & Mileage Tracker</div>
+    </footer>
+
+</body>
+</html>
